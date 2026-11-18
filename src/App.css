@@ -1,31 +1,705 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
+#root {
   min-height: 100vh;
+}
+
+.invitation-page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 100vh;
+  overflow: hidden;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(ellipse at 15% 18%, rgb(255 255 255 / 75%), transparent 34%),
+    radial-gradient(ellipse at 85% 82%, rgb(255 255 255 / 65%), transparent 35%),
+    linear-gradient(135deg, #f8e9e9, #f7e5df 50%, #f6e8ed);
+  color: #633d45;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.invitation-page::before,
+.invitation-page::after {
+  position: absolute;
+  z-index: -1;
+  width: min(58vw, 680px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 48%);
+  content: '';
+  filter: blur(90px);
+  pointer-events: none;
+  animation: ambient-glow 12s ease-in-out infinite alternate;
+}
+
+.invitation-page::before {
+  top: -34%;
+  left: -20%;
+}
+
+.invitation-page::after {
+  right: -20%;
+  bottom: -40%;
+  background: rgb(230 174 186 / 25%);
+  animation-delay: -6s;
+}
+
+.invitation-stage {
+  display: grid;
+  width: min(100%, 560px);
+  min-height: clamp(510px, 70vh, 600px);
+  place-items: center;
+}
+
+.envelope-trigger,
+.invitation-card {
+  grid-area: 1 / 1;
+}
+
+.envelope-trigger {
+  z-index: 2;
   display: flex;
+  width: min(100%, 330px);
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 10px;
+  border: 0;
+  background: transparent;
+  color: #804b57;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: opacity 350ms ease, transform 550ms cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+
+.envelope-trigger:hover {
+  transform: translateY(-5px);
+}
+
+.envelope-trigger:focus-visible {
+  border-radius: 20px;
+  outline: 3px solid #c8798b;
+  outline-offset: 3px;
+}
+
+.envelope-art {
+  position: relative;
+  display: block;
+  width: min(100%, 290px);
+  height: 190px;
+  perspective: 900px;
+  filter: drop-shadow(0 18px 20px rgb(131 77 91 / 22%));
+  transition: filter 350ms ease;
+}
+
+.envelope-trigger:hover .envelope-art {
+  filter: drop-shadow(0 22px 24px rgb(174 103 122 / 28%));
+}
+
+.envelope-art::before {
+  position: absolute;
+  border: 1px solid rgb(255 255 255 / 90%);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #f8dce0, #eabec8);
+  content: '';
+  inset: 0;
+}
+
+.envelope-letter {
+  position: absolute;
+  top: 10%;
+  left: 9%;
+  display: flex;
+  width: 82%;
+  height: 76%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  border: 1px solid #f1d8d9;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #fffdfa, #fff2f1);
+  box-shadow: 0 4px 14px rgb(131 77 91 / 10%);
+  color: #9b6670;
+  font-size: 19px;
+  transition: transform 650ms cubic-bezier(0.2, 0.75, 0.3, 1) 120ms;
+}
+
+.letter-heart {
+  margin-top: 8px;
+  color: #cb8391;
+  font-size: 17px;
+}
+
+.envelope-pocket {
+  position: absolute;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(145deg, #f2cbd1, #dfa8b4);
+  clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%);
+  inset: 0;
+}
+
+.envelope-flap {
+  position: absolute;
+  z-index: 1;
+  border-radius: 13px 13px 0 0;
+  background: linear-gradient(160deg, #f8e1e3, #e8bbc5);
+  clip-path: polygon(0 0, 100% 0, 50% 64%);
+  inset: 0 0 0;
+  transform: rotateX(0);
+  transform-origin: 50% 0;
+  transition: transform 650ms cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+
+.envelope-seal {
+  position: absolute;
+  z-index: 2;
+  top: 48%;
+  left: 50%;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #d98e9d, #bf7184);
+  box-shadow: 0 3px 10px rgb(131 77 91 / 20%);
   color: white;
+  font-size: 15px;
+  transform: translate(-50%, -50%);
+  transition: opacity 250ms ease, transform 350ms ease;
 }
 
-.App-link {
-  color: #61dafb;
+.open-cue {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 27px;
+  color: #804b57;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  animation: cue-bounce 1.8s ease-in-out infinite;
 }
 
-.heart {
-  color: #ff0000;
+.open-cue span {
+  color: #c8798b;
+  font-size: 21px;
 }
 
-.small {
-  font-size: 0.75rem;
+.open-hint {
+  margin-top: 7px;
+  color: #a17b80;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.invitation-stage.is-open .envelope-trigger {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(24px) scale(0.94);
+  visibility: hidden;
+  transition:
+    opacity 350ms ease 420ms,
+    transform 600ms cubic-bezier(0.2, 0.75, 0.3, 1) 200ms,
+    visibility 0s linear 800ms;
+}
+
+.invitation-stage.is-open .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+.invitation-stage.is-open .envelope-letter {
+  transform: translateY(-42px);
+}
+
+.invitation-stage.is-open .envelope-seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+}
+
+.invitation-card {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  width: min(100%, 560px);
+  padding: 62px 48px 46px;
+  border: 1px solid rgb(255 255 255 / 90%);
+  border-radius: 280px 280px 28px 28px;
+  background: linear-gradient(145deg, rgb(255 253 251 / 94%), rgb(255 248 247 / 85%));
+  box-shadow:
+    0 24px 70px rgb(131 77 91 / 14%),
+    0 3px 12px rgb(255 255 255 / 70%) inset;
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  transform: translateY(20px) scale(0.96);
+  visibility: hidden;
+  transition:
+    opacity 600ms ease,
+    transform 600ms cubic-bezier(0.2, 0.75, 0.3, 1),
+    visibility 0s linear 600ms;
+  animation: card-glow 6s ease-in-out 900ms infinite;
+}
+
+.invitation-stage.is-open .invitation-card {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+  transition:
+    opacity 650ms ease 450ms,
+    transform 650ms cubic-bezier(0.2, 0.75, 0.3, 1) 450ms,
+    visibility 0s linear 450ms;
+}
+
+.invitation-card::after {
+  position: absolute;
+  z-index: 2;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 34%,
+    rgb(255 255 255 / 42%) 49%,
+    transparent 64%
+  );
+  content: '';
+  inset: 0;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  transform: translateX(-120%);
+  animation: card-shimmer 9s ease-in-out 1.5s infinite;
+}
+
+.card-rose {
+  margin-bottom: 12px;
+  font-size: 34px;
+  animation: rose-sway 4s ease-in-out infinite;
+}
+
+.eyebrow {
+  margin: 0 0 18px;
+  color: #a56d78;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.invitation-card h1 {
+  margin: 0;
+  color: #804b57;
+  font-size: clamp(36px, 8vw, 52px);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.invitation-card h1 span {
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(23px, 5vw, 30px);
+  font-style: italic;
+}
+
+.heart-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: min(180px, 60%);
+  margin: 25px auto 20px;
+  color: #d78c9c;
+}
+
+.heart-divider::before,
+.heart-divider::after {
+  height: 1px;
+  flex: 1;
+  background: #e8c9cd;
+  content: '';
+}
+
+.heart-divider span {
+  font-size: 14px;
+}
+
+.message {
+  margin: 0 auto 30px;
+  color: #765d61;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.accept-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 27px;
+  border: 1px solid #d88e9c;
+  border-radius: 999px;
+  background: linear-gradient(
+    110deg,
+    #c8798b 15%,
+    #d98e9d 38%,
+    #f4c3cb 50%,
+    #d98e9d 62%,
+    #c8798b 85%
+  );
+  background-size: 220% 100%;
+  box-shadow: 0 8px 20px rgb(190 112 130 / 25%);
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: box-shadow 220ms ease, transform 220ms ease;
+  animation: button-shimmer 5s ease-in-out infinite;
+}
+
+.accept-button::before,
+.accept-button::after {
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgb(216 142 156 / 40%);
+  border-radius: inherit;
+  content: '';
+  inset: -5px;
+  animation: button-glow 2.4s ease-out infinite;
+}
+
+.accept-button::after {
+  animation-delay: 1.2s;
+}
+
+.accept-button:hover,
+.accept-button:focus-visible {
+  box-shadow: 0 12px 28px rgb(190 112 130 / 38%);
+  transform: translateY(-2px);
+}
+
+.accept-button:focus-visible {
+  outline: 3px solid #804b57;
+  outline-offset: 7px;
+}
+
+.button-rose {
+  font-size: 17px;
+  animation: rose-sway 2.5s ease-in-out infinite;
+}
+
+.button-heart {
+  font-size: 13px;
+  animation: heart-beat 1.3s ease-in-out infinite;
+}
+
+.button-sparkle {
+  position: absolute;
+  color: #fff8df;
+  font-size: 14px;
+  pointer-events: none;
+  text-shadow: 0 0 8px rgb(255 255 255 / 95%);
+  animation: sparkle-pop 2.2s ease-in-out infinite;
+}
+
+.button-sparkle-one {
+  top: -11px;
+  right: 23%;
+}
+
+.button-sparkle-two {
+  bottom: -7px;
+  left: 18%;
+  animation-delay: -1.1s;
+}
+
+.signature {
+  margin: 25px 0 0;
+  color: #a17b80;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.signature span {
+  color: #cb8391;
+  font-size: 19px;
+}
+
+.petal {
+  position: absolute;
+  opacity: 0.55;
+  animation: float 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.petal-one {
+  top: 12%;
+  left: 12%;
+  font-size: 31px;
+}
+
+.petal-two {
+  top: 23%;
+  right: 12%;
+  font-size: 27px;
+  animation-delay: -2s;
+}
+
+.petal-three {
+  right: 16%;
+  bottom: 12%;
+  font-size: 34px;
+  animation-delay: -4s;
+}
+
+.petal-four {
+  bottom: 16%;
+  left: 14%;
+  font-size: 29px;
+  animation-delay: -1s;
+}
+
+.petal-rain,
+.sparkle-field {
+  position: absolute;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  inset: 0;
+}
+
+.sparkle-field::before {
+  position: absolute;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 28%, rgb(255 255 255 / 95%), transparent 100%),
+    radial-gradient(2px 2px at 28% 74%, rgb(255 255 255 / 85%), transparent 100%),
+    radial-gradient(1px 1px at 46% 16%, rgb(255 255 255 / 90%), transparent 100%),
+    radial-gradient(2px 2px at 63% 62%, rgb(255 255 255 / 90%), transparent 100%),
+    radial-gradient(1.5px 1.5px at 82% 32%, rgb(255 255 255 / 85%), transparent 100%),
+    radial-gradient(2px 2px at 91% 83%, rgb(255 255 255 / 95%), transparent 100%);
+  content: '';
+  inset: 0;
+  opacity: 0.7;
+  animation: dust-glow 4s ease-in-out infinite alternate;
+}
+
+.falling-petal {
+  position: absolute;
+  top: -8vh;
+  width: 12px;
+  height: 18px;
+  border-radius: 2px 90% 2px 90%;
+  background: linear-gradient(135deg, #fff5f5, #d98c9d);
+  box-shadow: 0 2px 8px rgb(185 117 131 / 18%);
+  opacity: 0;
+  animation: petal-fall 18s linear infinite;
+}
+
+.petal-a { left: 8%; animation-delay: -3s; animation-duration: 17s; }
+.petal-b { left: 22%; animation-delay: -12s; animation-duration: 21s; }
+.petal-c { left: 39%; animation-delay: -7s; animation-duration: 19s; }
+.petal-d { left: 56%; animation-delay: -15s; animation-duration: 22s; }
+.petal-e { left: 68%; animation-delay: -5s; animation-duration: 16s; }
+.petal-f { left: 79%; animation-delay: -10s; animation-duration: 20s; }
+.petal-g { left: 91%; animation-delay: -1s; animation-duration: 18s; }
+.petal-h { left: 48%; animation-delay: -17s; animation-duration: 23s; }
+
+.sparkle {
+  position: absolute;
+  color: #c98d97;
+  text-shadow: 0 0 12px rgb(255 255 255 / 90%);
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.sparkle-one { top: 18%; left: 29%; font-size: 16px; }
+.sparkle-two { top: 35%; right: 22%; font-size: 23px; animation-delay: -1.2s; }
+.sparkle-three { right: 32%; bottom: 19%; font-size: 16px; animation-delay: -2.1s; }
+.sparkle-four { bottom: 31%; left: 23%; font-size: 20px; animation-delay: -0.6s; }
+.sparkle-five { top: 68%; left: 9%; font-size: 14px; animation-delay: -1.7s; }
+.sparkle-six { top: 9%; left: 53%; font-size: 13px; animation-delay: -2.4s; }
+.sparkle-seven { top: 56%; right: 8%; font-size: 18px; animation-delay: -0.9s; }
+.sparkle-eight { bottom: 8%; left: 48%; font-size: 15px; animation-delay: -1.4s; }
+.sparkle-nine { top: 78%; right: 29%; font-size: 12px; animation-delay: -2.8s; }
+
+@keyframes cue-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes card-glow {
+  0%, 100% {
+    box-shadow:
+      0 24px 70px rgb(131 77 91 / 14%),
+      0 3px 12px rgb(255 255 255 / 70%) inset;
+  }
+  50% {
+    box-shadow:
+      0 28px 82px rgb(174 103 122 / 22%),
+      0 3px 18px rgb(255 255 255 / 90%) inset,
+      0 0 34px rgb(255 223 229 / 55%);
+  }
+}
+
+@keyframes button-shimmer {
+  0%, 100% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+}
+
+@keyframes sparkle-pop {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.65) rotate(-12deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(12deg);
+  }
+}
+
+@keyframes dust-glow {
+  from {
+    opacity: 0.35;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes ambient-glow {
+  from {
+    opacity: 0.55;
+    transform: translate3d(-2%, -1%, 0) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(3%, 2%, 0) scale(1.08);
+  }
+}
+
+@keyframes card-shimmer {
+  0%, 65%, 100% {
+    transform: translateX(-120%);
+  }
+  82% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes petal-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+  }
+  12% {
+    opacity: 0.62;
+  }
+  88% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(7vw, 112vh, 0) rotate(620deg);
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.75) rotate(0deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.15) rotate(20deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(8deg);
+  }
+}
+
+@keyframes rose-sway {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes button-glow {
+  0% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.13);
+  }
+}
+
+@keyframes heart-beat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+}
+
+@media (max-width: 480px) {
+  .invitation-card {
+    padding: 54px 25px 38px;
+  }
+
+  .invitation-card::after {
+    display: none;
+  }
+
+  .message {
+    font-size: 15px;
+  }
+
+  .petal-one {
+    left: 5%;
+  }
+
+  .petal-two {
+    right: 5%;
+  }
+
+  .petal-three {
+    right: 6%;
+  }
+
+  .petal-four {
+    left: 5%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
